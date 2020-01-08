@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Comments CommentItem has a valid snapshot 1`] = `
+<div
+  className="comment"
+>
+  <div
+    className="header"
+  >
+    wendy666
+  </div>
+  <div
+    className="body"
+  >
+    Test comment 2
+  </div>
+  <div
+    className="footer"
+  />
+</div>
+`;
+
+exports[`Comments CommentList has a valid snapshot 1`] = `
+Array [
+  <div>
+    <div
+      className="comment"
+    >
+      <div
+        className="header"
+      >
+        lilniro
+      </div>
+      <div
+        className="body"
+      >
+        Test comment 1
+      </div>
+      <div
+        className="footer"
+      />
+    </div>
+  </div>,
+  <div>
+    <div
+      className="comment"
+    >
+      <div
+        className="header"
+      >
+        wendy666
+      </div>
+      <div
+        className="body"
+      >
+        Test comment 2
+      </div>
+      <div
+        className="footer"
+      />
+    </div>
+  </div>,
+]
+`;

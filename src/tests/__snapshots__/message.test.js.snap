@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Message Message Item has a valid snapshot 1`] = `
+<div
+  className="message"
+>
+  <div
+    className="header"
+  >
+    <small>
+      testuser1
+    </small>
+  </div>
+  <div
+    className="body"
+  >
+    <p>
+      test message one
+    </p>
+  </div>
+  <div
+    className="footer"
+  />
+</div>
+`;
+
+exports[`Message Message List has a valid snapshot 1`] = `
+Array [
+  <div>
+    <div
+      className="message"
+    >
+      <div
+        className="header"
+      >
+        <small>
+          testuser1
+        </small>
+      </div>
+      <div
+        className="body"
+      >
+        <p>
+          test message one
+        </p>
+      </div>
+      <div
+        className="footer"
+      />
+    </div>
+  </div>,
+  <div>
+    <div
+      className="message"
+    >
+      <div
+        className="header"
+      >
+        <small>
+          testuser2
+        </small>
+      </div>
+      <div
+        className="body"
+      >
+        <p>
+          test message two
+        </p>
+      </div>
+      <div
+        className="footer"
+      />
+    </div>
+  </div>,
+]
+`;
