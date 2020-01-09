@@ -1,7 +1,8 @@
 import React from 'react';
-import { Router, Link } from 'react-router-dom';
+import MessageFooter from './MessageFooter.js';
+import { Link } from 'react-router-dom';
 
-export default ({ message }) => {
+export default ({ message, likes, likeMessage, commentCount }) => {
   return (
     <div className="message">
       <Link to={`/view/${message.id}`}>
@@ -11,9 +12,15 @@ export default ({ message }) => {
       <div className="body">
         <p>{message.text}</p>
       </div>
-      <div className="footer">
-      </div>
       </Link>
+      <div className="footer">
+        <MessageFooter likes={likes}
+          likeMessage={likeMessage}
+          message={message}
+          commentCount={commentCount}
+        />
+      </div>
+
     </div>
   );
 }

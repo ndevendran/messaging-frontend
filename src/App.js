@@ -1,83 +1,61 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
 import MessageList from './Messages/MessageList.js';
-import Message from './Messages/Message.js';
 import MessageContainer from './Messages/MessageContainer';
-import { Link, BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const messages = [
-  {
-    id: 1,
-    user: {
-      username: 'lilniro',
-    },
-    text: "Test message one!",
-  },
 
-  {
-    id: 2,
-    user: {
-      username: 'wendy666',
-    },
-    text: "Test message two!",
-  },
-];
+function mapStateToPropsMessage(state, props) {
+  const { router: { match: { params: { id: id } } } } = props;
+  const comments = state.comments.filter(comment => comment.messageId === id);
+  const message = state.messages[id];
+  return {
+    comments,
+    message,
+  };
+}
 
-const comments = [
-  {
-    id: 1,
-    user: {
-      username: 'lilniro',
-    },
-    text: "First comment!",
-    messageId: 1
-  },
-  {
-    id: 2,
-    user: {
-      username: 'chaterine',
-    },
-    text: "This is stupid!",
-    messageId: 1
-  },
-  {
-    id: 3,
-    user: {
-      username: 'marciacowley',
-    },
-    text: "Chaterine I couldn't get it working. I'm going home!",
-    messageId: 1
-  },
-  {
-    id: 4,
-    user: {
-      username: 'chaterine',
-    },
-    text: "Marcy I swear if you leave I'll have you evicted!",
-    messageId: 1
-  },
-  {
-    id: 5,
-    user: {
-      username: 'marciacowley',
-    },
-    text: "Too late! Already gone!",
-    messageId: 1
-  },
-];
+const ConnectedMessage = connect(mapStateToPropsMessage)(MessageContainer);
 
-function App() {
-  return (
-    <div className="App">
-    <Router>
-      <Route exact path="/" component={() => <MessageList messages={messages} />} />
-      <Route path="/view/:id" component={(router) =>
-        <MessageContainer messages={messages} comments={comments} router={router}/>}
-      />
-    </Router>
-    </div>
-  );
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      likes: this.props.likes,
+      comments: this.props.comments,
+      messages: this.props.messages,
+      messageIds: this.props.messageIds,
+    }
+  }
+
+  likeMessage = (messageId) => {
+    this.setState((prevState) => {
+      const message = this.state.likes[messageId];
+      message.count++;
+      return {
+        ...prevState,
+        message,
+      };
+    });
+  };
+
+  render () {
+    const { likes, messageIds, comments } = this.state;
+    return (
+      <div className="App">
+      <Router>
+        <Route exact path="/" component={() => <MessageList messageIds={messageIds}
+          likes={likes} likeMessage={this.likeMessage}
+          comments={comments}/>}
+        />
+        <Route path="/view/:id" component={(router) =>
+          <ConnectedMessage router={router}/>}
+        />
+      </Router>
+      </div>
+    );
+  }
 }
 
 export default App;

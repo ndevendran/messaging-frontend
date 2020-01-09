@@ -72,4 +72,10 @@ describe('Message', () => {
     });
 
   });
+
+  describe('Message Footer', () => {
+    it('renders without crashing', () => {
+      
+    });
+  });
 });
