@@ -17,7 +17,13 @@ export default ({ messageIds, likes, likeMessage, comments }) => {
   return (
     messageIds.map((id) => {
         const likeCount = likes[id].count;
-        const commentCount = comments.filter((comment) => comment.messageId === id).length;
+        let commentCount = 0;
+        for(var key in comments) {
+          if(comments[key]["messageId"] === id) {
+            commentCount++;
+          }
+        };
+
         return (
           <div key={id}>
             <ConnectedMessageItem messageId={id} likes={likeCount}

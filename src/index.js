@@ -2,7 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { createStore } from 'redux';
+import { createStore, combineReducers } from 'redux';
+import { schema, normalize } from 'normalizr';
 import { Provider } from 'react-redux';
 import * as serviceWorker from './serviceWorker';
 
@@ -10,6 +11,7 @@ const actionTypes = {
   LIKE_COMMENT: 'LIKE_COMMENT',
   LIKE_MESSAGE: 'LIKE_MESSAGE',
   CREATE_MESSAGE: 'CREATE_MESSAGE',
+  CREATE_COMMENT: 'CREATE_COMMENT',
 }
 
 function likeMessage(id) {
@@ -22,7 +24,14 @@ function likeMessage(id) {
 function createMessage(text, id, user) {
   return {
     type: actionTypes.CREATE_MESSAGE,
-    message: {id: id, text: text, user: user}
+    message: {id: id, text: text, user: user, commentIds: []}
+  }
+}
+
+function createComment(text, id, messageId, user) {
+  return {
+    type: actionTypes.CREATE_COMMENT,
+    comment: {id: id, text: text, user: user, messageId: messageId}
   }
 }
 
@@ -50,6 +59,63 @@ function messageReducer(state = [], action) {
   }
 }
 
+function commentReducer(state, action) {
+  switch(action.type) {
+    case actionTypes.CREATE_COMMENT: {
+      const comment = action.comment;
+      const comments = state.comments;
+      comments.push(comment);
+      const newState = { ...state, comments };
+      return newState;
+    }
+    default: return state;
+  }
+}
+
+
+const userSchema = new schema.Entity('user');
+const commentsSchema = new schema.Entity('comments', {
+  user: userSchema,
+});
+const messageSchema = new schema.Entity('messages', {
+  comments: [ commentsSchema ],
+  user: userSchema,
+});
+
+const messages2 = [
+  {
+    id: 1,
+    user: {
+      id: 1,
+      username: 'lilniro',
+    },
+    text: "Test message one!",
+    comments: [
+        {
+          id: 1,
+          user: {
+            id: 1,
+            username: 'lilniro',
+          },
+          text: "First comment!",
+          messageId: 1
+        },
+        {
+          id: 2,
+          user: {
+            id: 2,
+            username: 'chaterine',
+          },
+          text: "This is stupid!",
+          messageId: 1
+        }
+    ],
+  },
+];
+
+const normalizedData = normalize(messages2, [ messageSchema ]);
+console.log(`Normalized Data: ${JSON.stringify(normalizedData)}`);
+
 const messages = {
   1: {
     id: 1,
@@ -57,6 +123,7 @@ const messages = {
       username: 'lilniro',
     },
     text: "Test message one!",
+    commentIds: [1,2,3,4,5]
   },
 
   2: {
@@ -65,11 +132,12 @@ const messages = {
       username: 'wendy666',
     },
     text: "Test message two!",
+    commentIds: [],
   },
 };
 
-const comments = [
-  {
+const comments = {
+  1: {
     id: 1,
     user: {
       username: 'lilniro',
@@ -77,7 +145,7 @@ const comments = [
     text: "First comment!",
     messageId: 1
   },
-  {
+  2: {
     id: 2,
     user: {
       username: 'chaterine',
@@ -85,7 +153,7 @@ const comments = [
     text: "This is stupid!",
     messageId: 1
   },
-  {
+  3: {
     id: 3,
     user: {
       username: 'marciacowley',
@@ -93,7 +161,7 @@ const comments = [
     text: "Chaterine I couldn't get it working. I'm going home!",
     messageId: 1
   },
-  {
+  4: {
     id: 4,
     user: {
       username: 'chaterine',
@@ -101,7 +169,7 @@ const comments = [
     text: "Marcy I swear if you leave I'll have you evicted!",
     messageId: 1
   },
-  {
+  5: {
     id: 5,
     user: {
       username: 'marciacowley',
@@ -109,7 +177,7 @@ const comments = [
     text: "Too late! Already gone!",
     messageId: 1
   },
-];
+};
 
 const likes = {
   1: {
@@ -127,8 +195,16 @@ const users = {
 
   2: {
     username: "wendy666",
+  },
+
+  3: {
+    username: "marciacowley",
+  },
+
+  4: {
+    username: "chaterine",
   }
-}
+};
 
 const messageIds = [1, 2];
 
@@ -146,7 +222,9 @@ store.dispatch(likeMessage(3));
 
 ReactDOM.render(
     <Provider store={store}>
-    <App likes={likes} messages={messages} comments={comments} messageIds={messageIds}/>
+    <App likes={likes} messages={messages}
+      comments={comments}
+      messageIds={messageIds} />
     </Provider>,
     document.getElementById('root'));
 

@@ -1,12 +1,22 @@
 import React from 'react';
 import CommentItem from './CommentItem.js';
+import { connect } from 'react-redux';
 
-export default({ comments }) => {
+function mapStateToPropsCommentItem(state, props) {
+  const comment = state.comments[props.commentId];
+  return {
+    comment,
+  };
+}
+
+const ConnectedCommentItem = connect(mapStateToPropsCommentItem)(CommentItem);
+
+export default({ commentIds }) => {
   return (
-    comments.map(comment => {
+    commentIds.map(id => {
       return (
-        <div key={comment.id}>
-          <CommentItem comment={comment} />
+        <div key={id}>
+          <ConnectedCommentItem commentId={id} />
         </div>
       );
     })

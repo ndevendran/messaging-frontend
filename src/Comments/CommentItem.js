@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default ({ comment }) => {
+export default ({ comment, commentId }) => {
   return (
     <div className="comment">
       <div className="header">

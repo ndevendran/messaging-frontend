@@ -8,10 +8,10 @@ import { connect } from 'react-redux';
 
 function mapStateToPropsMessage(state, props) {
   const { router: { match: { params: { id: id } } } } = props;
-  const comments = state.comments.filter(comment => comment.messageId === id);
   const message = state.messages[id];
+  const commentIds = message.commentIds;
   return {
-    comments,
+    commentIds,
     message,
   };
 }
@@ -41,7 +41,7 @@ class App extends Component {
   };
 
   render () {
-    const { likes, messageIds, comments } = this.state;
+    const { likes, messageIds, comments, commentIds } = this.state;
     return (
       <div className="App">
       <Router>
@@ -50,7 +50,7 @@ class App extends Component {
           comments={comments}/>}
         />
         <Route path="/view/:id" component={(router) =>
-          <ConnectedMessage router={router}/>}
+          <ConnectedMessage router={router} />}
         />
       </Router>
       </div>
