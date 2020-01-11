@@ -3,9 +3,11 @@ import CommentItem from './CommentItem.js';
 import { connect } from 'react-redux';
 
 function mapStateToPropsCommentItem(state, props) {
-  const comment = state.comments[props.commentId];
+  const comment = state.commentState.comments[props.commentId];
+  const user = state.commentState.users[comment.user];
   return {
     comment,
+    user,
   };
 }
 

@@ -8,46 +8,38 @@ import { connect } from 'react-redux';
 
 function mapStateToPropsMessage(state, props) {
   const { router: { match: { params: { id: id } } } } = props;
-  const message = state.messages[id];
-  const commentIds = message.commentIds;
+  const message = state.messageState.messages[id];
+  const user = state.messageState.users[message.user];
   return {
-    commentIds,
+    user,
     message,
   };
 }
 
+function mapStateToPropsMessageList(state, props) {
+  const messageIds = state.messageState.messageIds;
+  return {
+    messageIds,
+  };
+}
+
+
+const ConnectedMessageList = connect(mapStateToPropsMessageList)(MessageList);
 const ConnectedMessage = connect(mapStateToPropsMessage)(MessageContainer);
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      likes: this.props.likes,
-      comments: this.props.comments,
-      messages: this.props.messages,
-      messageIds: this.props.messageIds,
     }
   }
 
-  likeMessage = (messageId) => {
-    this.setState((prevState) => {
-      const message = this.state.likes[messageId];
-      message.count++;
-      return {
-        ...prevState,
-        message,
-      };
-    });
-  };
-
   render () {
-    const { likes, messageIds, comments, commentIds } = this.state;
+    const { likes, messageIds, comments } = this.state;
     return (
       <div className="App">
       <Router>
-        <Route exact path="/" component={() => <MessageList messageIds={messageIds}
-          likes={likes} likeMessage={this.likeMessage}
-          comments={comments}/>}
+        <Route exact path="/" component={() => <ConnectedMessageList />}
         />
         <Route path="/view/:id" component={(router) =>
           <ConnectedMessage router={router} />}

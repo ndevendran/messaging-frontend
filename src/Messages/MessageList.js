@@ -1,35 +1,44 @@
 import React from 'react';
 import MessageItem from './MessageItem.js';
 import { connect } from 'react-redux';
+import { doLikeMessage } from '../actionCreator.js';
 
 
 function mapStateToPropsMessageItem(state, props) {
-  const messages = state.messages;
+  const messages = state.messageState.messages;
+  const comments = state.commentState.comments;
   const message = messages[props.messageId];
+  const likes = state.messageState.likes[props.messageId].count;
+
+  let commentCount = 0;
+  for(var key in comments) {
+    if(comments[key]["messageId"] === props.messageId) {
+      commentCount++;
+    }
+  };
+
   return {
     message,
+    likes,
+    commentCount,
   };
 }
 
-const ConnectedMessageItem = connect(mapStateToPropsMessageItem)(MessageItem)
+function mapDispatchToPropsMessageItem(dispatch, props) {
+  return {
+    likeMessage: () => dispatch(doLikeMessage(props.messageId)),
+  };
+}
 
-export default ({ messageIds, likes, likeMessage, comments }) => {
+const ConnectedMessageItem = connect(mapStateToPropsMessageItem,
+  mapDispatchToPropsMessageItem)(MessageItem);
+
+export default ({ messageIds }) => {
   return (
     messageIds.map((id) => {
-        const likeCount = likes[id].count;
-        let commentCount = 0;
-        for(var key in comments) {
-          if(comments[key]["messageId"] === id) {
-            commentCount++;
-          }
-        };
-
         return (
           <div key={id}>
-            <ConnectedMessageItem messageId={id} likes={likeCount}
-              likeMessage={likeMessage}
-              commentCount={commentCount}
-            />
+            <ConnectedMessageItem messageId={id} />
           </div>
         )
       }

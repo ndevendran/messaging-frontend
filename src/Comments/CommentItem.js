@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default ({ comment, commentId }) => {
+export default ({ comment, commentId, user }) => {
   return (
     <div className="comment">
       <div className="header">
-        {comment.user.username}
+        {user.username}
       </div>
       <div className="body">
         {comment.text}
