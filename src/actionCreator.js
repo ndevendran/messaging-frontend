@@ -13,6 +13,13 @@ export function doCreateComment(text, id, messageId, userId) {
   }
 }
 
+export function createCommentAndAddToMessage(text, commentId, messageId, userId) {
+  return function (dispatch) {
+    dispatch(doCreateComment(text, commentId, messageId, userId));
+    dispatch(doAddCommentToMessage(commentId, messageId));
+  };
+}
+
 export function doLikeMessage(id) {
   return {
     type: actionTypes.LIKE_MESSAGE,

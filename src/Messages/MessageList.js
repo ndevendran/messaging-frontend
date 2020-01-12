@@ -24,11 +24,15 @@ function mapStateToPropsMessageItem(state, props) {
   };
 }
 
+
+
 function mapDispatchToPropsMessageItem(dispatch, props) {
   return {
     likeMessage: () => dispatch(doLikeMessage(props.messageId)),
   };
 }
+
+
 
 const ConnectedMessageItem = connect(mapStateToPropsMessageItem,
   mapDispatchToPropsMessageItem)(MessageItem);

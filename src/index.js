@@ -9,7 +9,8 @@ import * as serviceWorker from './serviceWorker';
 import { connect } from 'react-redux';
 import thunk from 'redux-thunk';
 import { actionTypes, doLikeMessage, doCreateMessage,
-  doAddCommentToMessage, doCreateComment } from './actionCreator.js'
+  doAddCommentToMessage, doCreateComment,
+createCommentAndAddToMessage } from './actionCreator.js'
 import messageReducer from './Messages/reducers.js';
 import commentReducer from './Comments/reducers.js';
 
@@ -91,12 +92,7 @@ const rootReducer = combineReducers({
   commentState: commentReducer,
 });
 
-function createCommentAndAddToMessage(text, commentId, messageId, userId) {
-  return function (dispatch) {
-    dispatch(doCreateComment(text, commentId, messageId, userId));
-    dispatch(doAddCommentToMessage(commentId, messageId));
-  };
-}
+
 
 const store = createStore(rootReducer, initialState, applyMiddleware(thunk));
 

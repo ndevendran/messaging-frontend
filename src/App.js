@@ -4,6 +4,9 @@ import MessageList from './Messages/MessageList.js';
 import MessageContainer from './Messages/MessageContainer';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import CreateMessage from './Messages/CreateMessage.js';
+import { doCreateMessage } from './actionCreator.js';
+import uuid from 'uuid/v4';
 
 
 function mapStateToPropsMessage(state, props) {
@@ -23,7 +26,15 @@ function mapStateToPropsMessageList(state, props) {
   };
 }
 
+function mapDispatchToPropsCreateMessage(dispatch, props) {
+  return {
+    createMessage: (text) => {
+      dispatch(doCreateMessage(text, uuid(), 1));
+    },
+  }
+}
 
+const ConnectedCreateMessage = connect(null, mapDispatchToPropsCreateMessage)(CreateMessage)
 const ConnectedMessageList = connect(mapStateToPropsMessageList)(MessageList);
 const ConnectedMessage = connect(mapStateToPropsMessage)(MessageContainer);
 
@@ -39,7 +50,11 @@ class App extends Component {
     return (
       <div className="App">
       <Router>
-        <Route exact path="/" component={() => <ConnectedMessageList />}
+        <Route exact path="/" component={() =>
+          <div>
+            <ConnectedCreateMessage />
+            <ConnectedMessageList />
+          </div>}
         />
         <Route path="/view/:id" component={(router) =>
           <ConnectedMessage router={router} />}
