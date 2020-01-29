@@ -1,4 +1,7 @@
 import React from 'react';
+import { createCommentAndAddToMessage } from '../actionCreator.js';
+import uuid from 'uuid/v4';
+import { connect } from 'react-redux';
 
 class CreateComment extends React.Component {
   constructor(props) {
@@ -44,4 +47,13 @@ class CreateComment extends React.Component {
   }
 }
 
-export default CreateComment;
+function mapDispatchToProps(dispatch, props) {
+  return {
+    createComment: (text, messageId) => {
+      dispatch(createCommentAndAddToMessage(text, uuid(), messageId, 1));
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)
+  (CreateComment);

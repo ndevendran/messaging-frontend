@@ -5,14 +5,12 @@ import App from './App';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { schema, normalize } from 'normalizr';
 import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
-import { connect } from 'react-redux';
 import thunk from 'redux-thunk';
-import { actionTypes, doLikeMessage, doCreateMessage,
-  doAddCommentToMessage, doCreateComment,
-createCommentAndAddToMessage } from './actionCreator.js'
+import { doLikeMessage, doCreateMessage,
+  createCommentAndAddToMessage } from './actionCreator.js'
 import messageReducer from './Messages/reducers.js';
 import commentReducer from './Comments/reducers.js';
+import profileReducer from './Profile/reducers.js';
 
 const likesSchema = new schema.Entity('likes');
 const userSchema = new schema.Entity('user');
@@ -72,6 +70,8 @@ const users = normalizedData.entities.user;
 
 const messageIds = normalizedData.result;
 
+const currentUser = users[2];
+
 console.log(normalizedData);
 
 const initialState = {
@@ -84,12 +84,16 @@ const initialState = {
   commentState: {
     comments,
     users,
-  }
+  },
+  profileState: {
+    currentUser,
+  },
 };
 
 const rootReducer = combineReducers({
   messageState: messageReducer,
   commentState: commentReducer,
+  profileState: profileReducer,
 });
 
 
@@ -102,7 +106,7 @@ store.dispatch(doLikeMessage(3));
 
 ReactDOM.render(
     <Provider store={store}>
-    <App messageIds={messageIds} />
+      <App messageIds={messageIds} />
     </Provider>,
     document.getElementById('root')
 );

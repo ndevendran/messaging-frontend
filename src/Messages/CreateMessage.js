@@ -1,4 +1,24 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { doCreateMessage } from '../actionCreator.js';
+import uuid from 'uuid/v4';
+
+
+function mapStateToProps(state, props) {
+  const currentUser = state.profileState.currentUser;
+  return {
+    currentUser,
+  };
+}
+
+function mapDispatchToProps(dispatch, props) {
+  console.log();
+  return {
+    createMessage: (text, currentUser) => {
+      dispatch(doCreateMessage(text, uuid(), currentUser.id));
+    },
+  }
+}
 
 class CreateMessage extends React.Component {
   constructor(props) {
@@ -19,7 +39,7 @@ class CreateMessage extends React.Component {
   }
 
   onCreateMessage(event) {
-    this.props.createMessage(this.state.value);
+    this.props.createMessage(this.state.value, this.props.currentUser);
     this.setState({
       value: '',
     });
@@ -40,4 +60,5 @@ class CreateMessage extends React.Component {
   }
 }
 
-export default CreateMessage;
+export default connect(
+  mapStateToProps, mapDispatchToProps)(CreateMessage);
