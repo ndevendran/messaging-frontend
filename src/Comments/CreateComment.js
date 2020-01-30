@@ -25,7 +25,7 @@ class CreateComment extends React.Component {
   }
 
   onSubmitComment(event) {
-    this.props.createComment(this.state.value, this.props.messageId);
+    this.props.createComment(this.state.value, this.props.messageId, this.props.currentUser);
     this.setState({
       value: '',
     });
@@ -47,13 +47,20 @@ class CreateComment extends React.Component {
   }
 }
 
+function mapStateToProps(state, props) {
+  const currentUser = state.profileState.currentUser;
+  return {
+    currentUser,
+  };
+}
+
 function mapDispatchToProps(dispatch, props) {
   return {
-    createComment: (text, messageId) => {
-      dispatch(createCommentAndAddToMessage(text, uuid(), messageId, 1));
+    createComment: (text, messageId, currentUser) => {
+      dispatch(createCommentAndAddToMessage(text, uuid(), messageId, currentUser.id));
     }
   }
 }
 
-export default connect(null, mapDispatchToProps)
+export default connect(mapStateToProps, mapDispatchToProps)
   (CreateComment);

@@ -12,7 +12,6 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch, props) {
-  console.log();
   return {
     createMessage: (text, currentUser) => {
       dispatch(doCreateMessage(text, uuid(), currentUser.id));
