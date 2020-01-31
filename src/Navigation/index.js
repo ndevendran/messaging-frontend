@@ -17,6 +17,9 @@ const Navigation = ({
     <div className="Navigation-link">
       <Link to={routes.MESSAGES}>Messages</Link>
     </div>
+    <div className="Navigation-link">
+      <Link to={routes.SIGNIN}>Sign In</Link>
+    </div>
     </header>
 );
 

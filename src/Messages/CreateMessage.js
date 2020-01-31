@@ -6,8 +6,10 @@ import uuid from 'uuid/v4';
 
 function mapStateToProps(state, props) {
   const currentUser = state.profileState.currentUser;
+  const token = state.profileState.token;
   return {
     currentUser,
+    token,
   };
 }
 
@@ -46,16 +48,25 @@ class CreateMessage extends React.Component {
   }
 
   render () {
-    return (
-      <div>
-        <form onSubmit={this.onCreateMessage}>
-          <input type="text" value={this.state.value}
-            onChange={this.onChangeMessage}
-          />
-          <button type="submit">Create Message</button>
-        </form>
-      </div>
-    );
+    if(this.props.token) {
+      return (
+        <div>
+          <form onSubmit={this.onCreateMessage}>
+            <input type="text" value={this.state.value}
+              onChange={this.onChangeMessage}
+            />
+            <button type="submit">Create Message</button>
+          </form>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          Please Login To Create Messages...
+        </div>
+      )
+    }
+
   }
 }
 

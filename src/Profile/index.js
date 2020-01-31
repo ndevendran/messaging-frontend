@@ -17,10 +17,10 @@ const mapStateToProps = (state, props) => {
 }
 
 const Profile = ({ user, messageIds }) =>
-  <div>
-    <span>{user.username}</span>
-    <MessageList messageIds={messageIds}/>
-  </div>
+    <div>
+      <span>{user.username}</span>
+      <MessageList messageIds={messageIds}/>
+    </div>
 
 export default connect(
   mapStateToProps,

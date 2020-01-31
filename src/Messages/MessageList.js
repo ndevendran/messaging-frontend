@@ -10,12 +10,12 @@ function mapStateToProps(state, props) {
   };
 }
 
-const MessageList =  ({ messageIds }) => {
+const MessageList =  ({ messageIds, messages }) => {
   return (
-    messageIds.map((id) => {
+    messages.map((message) => {
         return (
-          <div key={id}>
-            <MessageItem messageId={id} />
+          <div key={message.id}>
+            <MessageItem messageId={message.id} message={message} />
           </div>
         )
       }

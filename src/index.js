@@ -12,6 +12,28 @@ import messageReducer from './Messages/reducers.js';
 import commentReducer from './Comments/reducers.js';
 import profileReducer from './Profile/reducers.js';
 
+import { ApolloClient } from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
+import { HttpLink } from 'apollo-link-http';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
+const MESSAGING_BASE_URL = 'http://localhost:8000/graphql';
+
+const httpLink = new HttpLink({
+  uri: MESSAGING_BASE_URL,
+  headers: {
+  },
+});
+
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache,
+});
+
+
+
 const likesSchema = new schema.Entity('likes');
 const userSchema = new schema.Entity('user');
 const commentsSchema = new schema.Entity('comments', {
@@ -105,8 +127,10 @@ store.dispatch(createCommentAndAddToMessage("Using actions to comment", 3, 3, 2)
 store.dispatch(doLikeMessage(3));
 
 ReactDOM.render(
-    <Provider store={store}>
-      <App messageIds={messageIds} />
-    </Provider>,
+    <ApolloProvider client={client}>
+      <Provider store={store}>
+        <App messageIds={messageIds} />
+      </Provider>
+    </ApolloProvider>,
     document.getElementById('root')
 );

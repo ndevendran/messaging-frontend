@@ -4,26 +4,24 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { doLikeMessage } from '../actionCreator.js'
 
-function mapStateToProps(state, props) {
-  const message = state.messageState.messages[props.messageId];
-  const comments = state.commentState.comments;
-  const likes = state.messageState.likes[props.messageId].count;
-  const user = state.messageState.users[message.user];
-
-  let commentCount = 0;
-  for(var key in comments) {
-    if(comments[key]["messageId"] === props.messageId) {
-      commentCount++;
-    }
-  };
-
-  return {
-    message,
-    likes,
-    commentCount,
-    user,
-  };
-}
+// function mapStateToProps(state, props) {
+//   const comments = state.commentState.comments;
+//   const likes = state.messageState.likes[props.messageId].count;
+//   const user = state.messageState.users[message.user];
+//
+//   let commentCount = 0;
+//   for(var key in comments) {
+//     if(comments[key]["messageId"] === props.messageId) {
+//       commentCount++;
+//     }
+//   };
+//
+//   return {
+//     likes,
+//     commentCount,
+//     user,
+//   };
+// }
 
 
 
@@ -33,12 +31,14 @@ function mapDispatchToProps(dispatch, props) {
   };
 }
 
-const MessageItem = ({ message, likes, likeMessage, commentCount, user }) => {
+const MessageItem = ({ message, likeMessage, user }) => {
+  const commentCount = message.comments.length;
+  const likes = message.likes.count;
   return (
     <div className="message">
       <Link to={`/view/${message.id}`}>
       <div className="header">
-        <small>{user.username}</small>
+        <small>{message.user.username}</small>
       </div>
       <div className="body">
         <p>{message.text}</p>
@@ -56,5 +56,5 @@ const MessageItem = ({ message, likes, likeMessage, commentCount, user }) => {
   );
 };
 
-export default connect(mapStateToProps,
+export default connect(null,
   mapDispatchToProps)(MessageItem);

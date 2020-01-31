@@ -4,6 +4,7 @@ export const actionTypes = {
   CREATE_MESSAGE: 'CREATE_MESSAGE',
   CREATE_COMMENT: 'CREATE_COMMENT',
   ADD_COMMENT: 'ADD_COMMENT',
+  USE_TOKEN: 'USE_TOKEN',
 }
 
 export function doCreateComment(text, id, messageId, userId) {
@@ -39,5 +40,12 @@ export function doAddCommentToMessage(commentId, messageId) {
     type: actionTypes.ADD_COMMENT,
     commentId: commentId,
     messageId: messageId,
+  }
+}
+
+export function doUpdateToken(token) {
+  return {
+    type: actionTypes.USE_TOKEN,
+    token: token,
   }
 }
