@@ -95,10 +95,10 @@ class App extends Component {
               </Query>
             </div>}
           />
-          <Route path="/login" component={() =>
+          <Route path="/login" component={(router) =>
             <div className="App-content_small-header">
               <h1>Sign In</h1>
-              <SignIn />
+              <SignIn router={router} />
             </div>
           }
           />

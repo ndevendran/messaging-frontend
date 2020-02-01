@@ -1,6 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import { useQuery } from '@apollo/react-hooks';
 import { doUpdateToken } from '../actionCreator.js';
 import { connect } from 'react-redux';
 
@@ -17,10 +18,11 @@ const SIGN_IN = gql`
 
 const mapDispatchToProps = (dispatch, props) => {
   return {
+    history: props.router.history,
     updateCurrentUser: (client, mutationResult) => {
       const token = mutationResult.data.signIn.token;
-      console.log(`The token is: ${token}`);
       dispatch(doUpdateToken(token));
+      localStorage.setItem('token', token);
     },
   };
 }
@@ -66,17 +68,12 @@ class SignIn extends React.Component {
             type="password"></input>
             <Mutation mutation={SIGN_IN}
               variables={{ login, password }}
-              update={this.props.updateCurrentUser}
+              onCompleted={() => this.props.history.push('/')}
             >
               {(signIn, { data, loading, error }) => {
-                if(error) {
                   return (
-                    <div>Login failed. Please try again.</div>
+                    <button type="button" onClick={signIn}>Sign In</button>
                   );
-                }
-                return (
-                  <button type="button" onClick={signIn}>Sign In</button>
-                );
               }}
             </Mutation>
       </div>

@@ -15,6 +15,9 @@ import profileReducer from './Profile/reducers.js';
 import { ApolloClient } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import { HttpLink } from 'apollo-link-http';
+import { ApolloLink } from 'apollo-link';
+import { setContext } from 'apollo-link-context';
+import { onError } from 'apollo-link-error';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 
 const MESSAGING_BASE_URL = 'http://localhost:8000/graphql';
@@ -25,10 +28,34 @@ const httpLink = new HttpLink({
   },
 });
 
+
+const errorLink = onError(({
+  graphQLErrors, networkError }) => {
+    if (graphQLErrors) {
+      //do something
+    }
+
+  if (networkError) {
+    console.log(`[Network error]: ${networkError}`);
+  }
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('token');
+  return {
+    headers: {
+      ...headers,
+      'x-token': token ? token : "",
+    }
+  }
+});
+
+const link = ApolloLink.from([errorLink, authLink, httpLink]);
+
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({
-  link: httpLink,
+  link,
   cache,
 });
 
