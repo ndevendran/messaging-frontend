@@ -56,6 +56,7 @@ class SignIn extends React.Component {
 
   render() {
     const { login, password } = this.state;
+    const { updateCurrentUser } = this.props;
     return (
       <div>
           Username:<input
@@ -68,13 +69,27 @@ class SignIn extends React.Component {
             type="password"></input>
             <Mutation mutation={SIGN_IN}
               variables={{ login, password }}
+              update={updateCurrentUser}
               onCompleted={() => this.props.history.push('/')}
             >
               {(signIn, { data, loading, error }) => {
-                  return (
-                    <button type="button" onClick={signIn}>Sign In</button>
-                  );
-              }}
+                if(error) {
+                  console.log(`The data: ${data}`);
+                  console.log(`The loading: ${loading}`);
+                  console.log(`The erro: ${error}`);
+                }
+
+                return (
+                  <button type="button" onClick={() =>
+                    {
+                      localStorage.setItem('token', '');
+                      signIn();
+                    }}>
+                    Sign In
+                  </button>
+                );
+              }
+              }
             </Mutation>
       </div>
     );

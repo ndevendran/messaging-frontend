@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 
 const CREATE_MESSAGE = gql`
   mutation($text: String!, $messageId: ID!) {
-    createComment(text: $text) {
+    createComment(text: $text, messageId: $messageId) {
       id
       text
       user {
@@ -27,7 +27,7 @@ class CreateComment extends React.Component {
     };
 
     this.onChangeComment = this.onChangeComment.bind(this);
-    this.onSubmitComment = this.onSubmitComment.bind(this);
+    this.onCreateComment = this.onCreateComment.bind(this);
   }
 
   onChangeComment(event) {
@@ -50,21 +50,24 @@ class CreateComment extends React.Component {
     if(this.props.token) {
       return (
         <div>
-          <form onSubmit={this.onSubmitComment}>
             <input type="text"
               value={this.state.value}
               onChange={this.onChangeComment}
             />
             <Mutation mutation={CREATE_MESSAGE}
-              variables={{ text: this.state.value }}
+              variables={{
+                text: this.state.value,
+                messageId: this.props.messageId,
+              }}
               update={this.onCreateComment}
             >
               {(createComment, { data, loading, error }) => {
+                console.log(error);
                 if(error) {
                   return (
                     <div>
                       <div>Error creating message</div>
-                      <button type="submit" onClick={createComment}>Create Message</button>
+                      <button type="button" onClick={createComment}>Create Message</button>
                     </div>
                   );
                 }
@@ -73,7 +76,6 @@ class CreateComment extends React.Component {
                 );
               }}
             </Mutation>
-          </form>
         </div>
       );
     } else {
@@ -86,7 +88,7 @@ class CreateComment extends React.Component {
 
 function mapStateToProps(state, props) {
   const currentUser = state.profileState.currentUser;
-  const token = state.token;
+  const token = localStorage.getItem('token');
   return {
     token,
     currentUser,

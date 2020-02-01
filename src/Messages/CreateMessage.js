@@ -22,8 +22,9 @@ const CREATE_MESSAGE = gql`
 function mapStateToProps(state, props) {
   const currentUser = state.profileState.currentUser;
   const token = state.profileState.token;
-  console.log(token);
+  const history = props.router.history;
   return {
+    history,
     currentUser,
     token,
   };
@@ -73,6 +74,7 @@ class CreateMessage extends React.Component {
             <Mutation mutation={CREATE_MESSAGE}
               variables={{ text: this.state.value }}
               update={this.onCreateMessage}
+              onCompleted={() => this.props.history.push('/')}
             >
               {(createMessage, { data, loading, error }) => {
                 if(error) {

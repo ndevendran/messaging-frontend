@@ -10,37 +10,6 @@ import SignIn from './Login/SignIn.js';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const GET_MESSAGES = gql`
-  {
-    messages(limit: 100) {
-      edges {
-        id
-        text
-        user {
-          username
-          id
-        }
-        comments {
-          id
-          text
-          user {
-            username
-            id
-          }
-        }
-        likes {
-          count
-        }
-      }
-
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-  }
-}
-`;
-
 const GET_MESSAGE = gql`
   query( $id: ID! ){
     message(id: $id) {
@@ -64,6 +33,7 @@ const GET_MESSAGE = gql`
   }
 `;
 
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -77,22 +47,11 @@ class App extends Component {
       <Router>
         <Navigation />
         <div className="App-main">
-          <Route exact path="/" component={() =>
+          <Route exact path="/" component={(router) =>
             <div className="App-content_large-header">
               <h1>Messages</h1>
-              <CreateMessage />
-              <Query query={GET_MESSAGES}>
-                {({ data, loading }) => {
-                  if (loading || !data) {
-                    return <div>Loading...</div>;
-                  }
-
-                  const messages = data.messages.edges;
-                  return (
-                    <MessageList messages={messages}/>
-                  );
-                }}
-              </Query>
+              <CreateMessage router={router} />
+              <MessageList />
             </div>}
           />
           <Route path="/login" component={(router) =>

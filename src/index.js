@@ -24,8 +24,6 @@ const MESSAGING_BASE_URL = 'http://localhost:8000/graphql';
 
 const httpLink = new HttpLink({
   uri: MESSAGING_BASE_URL,
-  headers: {
-  },
 });
 
 

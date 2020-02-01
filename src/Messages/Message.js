@@ -9,7 +9,7 @@ export default ({ message }) => {
       <h6>{message.user.username}</h6>
       <CreateComment messageId={message.id} />
       <div className="comment-list">
-        <CommentList commentIds={message.comments} />
+        <CommentList messageId={message.id} />
       </div>
     </div>
   );
