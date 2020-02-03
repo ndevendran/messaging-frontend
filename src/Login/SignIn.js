@@ -1,7 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
-import { useQuery } from '@apollo/react-hooks';
 import { doUpdateToken } from '../actionCreator.js';
 import { connect } from 'react-redux';
 
@@ -11,6 +10,7 @@ const SIGN_IN = gql`
     signIn(login: $login, password: $password)
     {
       token
+      expiresAt
     }
   }
 `;
@@ -21,8 +21,10 @@ const mapDispatchToProps = (dispatch, props) => {
     history: props.router.history,
     updateCurrentUser: (client, mutationResult) => {
       const token = mutationResult.data.signIn.token;
+      const expiration = mutationResult.data.signIn.expiresAt;
       dispatch(doUpdateToken(token));
       localStorage.setItem('token', token);
+      localStorage.setItem('token_expiration', expiration);
     },
   };
 }

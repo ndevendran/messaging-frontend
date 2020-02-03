@@ -1,6 +1,4 @@
 import React from 'react';
-import { createCommentAndAddToMessage } from '../actionCreator.js';
-import uuid from 'uuid/v4';
 import { connect } from 'react-redux';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
@@ -62,7 +60,6 @@ class CreateComment extends React.Component {
               update={this.onCreateComment}
             >
               {(createComment, { data, loading, error }) => {
-                console.log(error);
                 if(error) {
                   return (
                     <div>
@@ -98,7 +95,6 @@ function mapStateToProps(state, props) {
 function mapDispatchToProps(dispatch, props) {
   return {
     createComment: (text, messageId) => {
-      console.log("Comment created...");
     }
   }
 }

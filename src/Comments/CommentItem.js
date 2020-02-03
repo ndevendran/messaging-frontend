@@ -1,14 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
-// function mapStateToProps(state, props) {
-//   const comment = props.comment;
-//   const user = state.commentState.users[comment.user];
-//   return {
-//     comment,
-//     user,
-//   };
-// }
 
 const CommentItem =  ({ comment, commentId, user }) => {
   return (

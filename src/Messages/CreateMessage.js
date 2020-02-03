@@ -4,6 +4,8 @@ import { doCreateMessage } from '../actionCreator.js';
 import uuid from 'uuid/v4';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import { withTokenRefresh } from '../Button/withTokenRefresh.js';
+import Button from '../Button/Button.js';
 
 
 const CREATE_MESSAGE = gql`
@@ -65,6 +67,7 @@ class CreateMessage extends React.Component {
   }
 
   render () {
+    const ButtonWithRefresh = withTokenRefresh(Button);
     if(this.state.token) {
       return (
         <div>
@@ -86,7 +89,13 @@ class CreateMessage extends React.Component {
                   );
                 }
                 return (
-                  <button type="submit" onClick={createMessage}>Create Message</button>
+                    <ButtonWithRefresh
+                      type="button"
+                      onClick={createMessage}
+                      router={this.props.router}
+                    >
+                    Create Message
+                    </ButtonWithRefresh>
                 );
               }}
             </Mutation>

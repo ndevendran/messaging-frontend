@@ -7,8 +7,10 @@ import CreateMessage from './Messages/CreateMessage.js';
 import Profile from './Profile';
 import Navigation from './Navigation';
 import SignIn from './Login/SignIn.js';
+import { Logout } from './Login/Logout.js';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { withTokenClear } from './Button/withTokenRefresh.js';
 
 const GET_MESSAGE = gql`
   query( $id: ID! ){
@@ -26,6 +28,7 @@ const GET_MESSAGE = gql`
         id
         text
         user {
+          id
           username
         }
       }
@@ -41,24 +44,41 @@ class App extends Component {
     }
   }
 
+
   render () {
     return (
       <div className="App">
       <Router>
         <Navigation />
         <div className="App-main">
-          <Route exact path="/" component={(router) =>
-            <div className="App-content_large-header">
-              <h1>Messages</h1>
-              <CreateMessage router={router} />
-              <MessageList />
-            </div>}
-          />
-          <Route path="/login" component={(router) =>
-            <div className="App-content_small-header">
-              <h1>Sign In</h1>
-              <SignIn router={router} />
-            </div>
+          <Route exact path="/" component={(router) => {
+            const ListWithClear = withTokenClear(MessageList);
+            return (
+              <div className="App-content_large-header">
+                <h1>Messages</h1>
+                <CreateMessage router={router} />
+                <ListWithClear router={router} />
+              </div>
+            );
+          }}/>
+          <Route path="/login" component={(router) => {
+            const token = localStorage.getItem('token');
+            if(token) {
+              return (
+                <div className="App-content_small-header">
+                <Logout />
+                </div>
+              );
+            } else {
+              return (
+                <div className="App-content_small-header">
+                  <h1>Sign In</h1>
+                  <SignIn router={router} />
+                </div>
+              );
+            }
+          }
+
           }
           />
           <Route path="/view/:id" component={(router) =>
@@ -75,8 +95,9 @@ class App extends Component {
                 }
 
                 const message = data.message;
+                const MessageWithClear = withTokenClear(MessageContainer);
                 return (
-                  <MessageContainer message={message} router={router} />
+                  <MessageWithClear message={message} router={router} />
                 );
               }}
               </Query>
