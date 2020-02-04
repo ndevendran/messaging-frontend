@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { withTokenRefresh } from '../Button/withTokenRefresh.js';
 import Button from '../Button/Button.js';
+import './messageStyle.css';
 
 
 const CREATE_MESSAGE = gql`
@@ -109,42 +110,52 @@ class CreateMessage extends React.Component {
     const ButtonWithRefresh = withTokenRefresh(Button);
     if(this.state.token) {
       return (
-        <div>
+        <div className="create">
+            <div className="avatar"></div>
             <div>
-              <textarea rows="4" cols="50"
+              <textarea className="textInput"
+                rows="4" cols="50"
                 value={this.state.value}
                 onChange={this.onChangeMessage}
               ></textarea>
-              <Mutation mutation={CREATE_MESSAGE}
-                variables={{ text: this.state.value }}
-                update={updateMessages}
-                onCompleted={() => {
-                  this.props.history.push('/');
-                  this.setState({
-                  value: ''
-                });
-              }}
-              >
-                {(createMessage, { data, loading, error }) => {
-                  if(error) {
-                    return (
-                      <div>
-                        <div>Error creating message</div>
-                        <button type="submit" onClick={createMessage}>Create Message</button>
-                      </div>
-                    );
-                  }
-                  return (
-                      <ButtonWithRefresh
-                        type="button"
-                        onClick={createMessage}
-                        router={this.props.router}
-                      >
-                      Create Message
-                      </ButtonWithRefresh>
-                  );
-                }}
-              </Mutation>
+              <div className="createOptions">
+                <div className="createFormatting">
+                  <span>Insert Picture</span>
+                  <span>Bold</span>
+                </div>
+                <div className="createButton">
+                  <Mutation mutation={CREATE_MESSAGE}
+                    variables={{ text: this.state.value }}
+                    update={updateMessages}
+                    onCompleted={() => {
+                      this.props.history.push('/');
+                      this.setState({
+                      value: ''
+                    });
+                  }}
+                  >
+                    {(createMessage, { data, loading, error }) => {
+                      if(error) {
+                        return (
+                          <div>
+                            <div>Error creating message</div>
+                            <button type="submit" onClick={createMessage}>Create Message</button>
+                          </div>
+                        );
+                      }
+                      return (
+                          <ButtonWithRefresh
+                            type="button"
+                            onClick={createMessage}
+                            router={this.props.router}
+                          >
+                          Create Message
+                          </ButtonWithRefresh>
+                      );
+                    }}
+                  </Mutation>
+                </div>
+              </div>
             </div>
         </div>
       );
