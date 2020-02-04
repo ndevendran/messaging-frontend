@@ -7,6 +7,7 @@
   background-color: #24292e;
   display: flex;
   align-items: baseline;
+  justify-content: space-between;
 }
 
 @media only screen and (max-device-width: 480px) {
@@ -15,6 +16,20 @@
     justify-content: center;
     align-items: center;
   }
+}
+
+.Navigation-Main {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 50%;
+  justify-content: flex-start;
+}
+
+.Navigation-Auth {
+  display: flex;
+  justify-content: flex-end;
+  width: 50%;
 }
 
 .Navigation-link {

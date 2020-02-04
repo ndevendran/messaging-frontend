@@ -1,0 +1,42 @@
+.message-container {
+  border: 1px solid lightblue;
+  margin: auto;
+  margin-top: 10px;
+  width: 500px;
+  height: 100px;
+  display: grid;
+  grid-template-columns: [col1-start] 25% [col1-end] 75%;
+  grid-template-rows: 100%;
+}
+
+.message {
+  text-align: left;
+}
+.message-container .avatar {
+  border: 1px solid lightblue;
+  grid-column-start: col1-start;
+}
+
+.message-container .message {
+  border: 1px solid lightblue;
+  grid-column-start: col1-end;
+}
+
+.message .body {
+  padding-left: 10%;
+}
+
+.message .footer {
+  display: grid;
+  grid-template-columns: 10%
+      [footer-col1-start] 40%
+      [footer-col1-end] 40%;
+  grid-template-rows: 100%;
+}
+
+.message .footer .likes {
+  grid-column-start: footer-col1-start;
+}
+
+.message a {
+}

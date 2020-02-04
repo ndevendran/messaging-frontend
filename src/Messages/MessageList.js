@@ -14,7 +14,7 @@ function mapStateToProps(state, props) {
 
 const GET_MESSAGES = gql`
   {
-    messages(limit: 100) {
+    messages {
       edges {
         id
         text
@@ -43,7 +43,7 @@ const GET_MESSAGES = gql`
 }
 `;
 
-const MessageList = () => {
+const MessageList = ({ router }) => {
   return (
     <Query query={GET_MESSAGES}>
       {({ data, loading }) => {
@@ -56,7 +56,10 @@ const MessageList = () => {
           messages.map((message) => {
               return (
                 <div key={message.id}>
-                  <MessageItem messageId={message.id} message={message} />
+                  <MessageItem messageId={message.id}
+                    message={message}
+                    router={router}
+                  />
                 </div>
               )
             }

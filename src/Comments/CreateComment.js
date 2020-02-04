@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Redirect } from 'react-router-dom';
 
-const CREATE_MESSAGE = gql`
+const CREATE_COMMENT = gql`
   mutation($text: String!, $messageId: ID!) {
     createComment(text: $text, messageId: $messageId) {
       id
@@ -16,12 +16,30 @@ const CREATE_MESSAGE = gql`
   }
 `;
 
+const COMMENTS_QUERY = gql`
+query($messageId: ID!) {
+  comments(messageId: $messageId) {
+    edges {
+      id
+      text
+      user {
+        id
+        username
+      }
+    }
+  }
+}
+`;
+
 class CreateComment extends React.Component {
   constructor(props) {
     super(props);
 
+    const token = localStorage.getItem('token');
+
     this.state = {
-      value: ''
+      value: '',
+      token,
     };
 
     this.onChangeComment = this.onChangeComment.bind(this);
@@ -38,26 +56,46 @@ class CreateComment extends React.Component {
   }
 
   onCreateComment(client, mutationResult) {
-    this.props.createComment(this.state.value, this.props.messageId, this.props.currentUser);
+    const comments = client.readQuery({
+      query: COMMENTS_QUERY,
+      variables: { messageId: this.props.messageId }
+    });
+
+    client.writeQuery({
+      query: COMMENTS_QUERY,
+      variables: { messageId: this.props.messageId },
+      data: {
+        comments: {
+            ...comments.comments,
+            edges: comments.comments
+              .edges.concat(mutationResult.data.createComment),
+        }
+      }
+    });
+
     this.setState({
-      value: '',
+      value: ''
     });
   }
 
   render() {
-    if(this.props.token) {
+    if(this.state.token) {
       return (
         <div>
             <input type="text"
               value={this.state.value}
               onChange={this.onChangeComment}
             />
-            <Mutation mutation={CREATE_MESSAGE}
+            <Mutation mutation={CREATE_COMMENT}
               variables={{
                 text: this.state.value,
                 messageId: this.props.messageId,
               }}
               update={this.onCreateComment}
+              onCompleted={() => {
+                const url = '/view/' + (this.props.messageId);
+                this.props.router.history.push(url);
+              }}
             >
               {(createComment, { data, loading, error }) => {
                 if(error) {
@@ -83,21 +121,4 @@ class CreateComment extends React.Component {
   }
 }
 
-function mapStateToProps(state, props) {
-  const currentUser = state.profileState.currentUser;
-  const token = localStorage.getItem('token');
-  return {
-    token,
-    currentUser,
-  };
-}
-
-function mapDispatchToProps(dispatch, props) {
-  return {
-    createComment: (text, messageId) => {
-    }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)
-  (CreateComment);
+export default CreateComment;

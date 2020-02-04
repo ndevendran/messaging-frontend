@@ -1,10 +1,10 @@
 import React from 'react';
 import Message from './Message.js';
 
-const MessageContainer = ({ message }) => {
+const MessageContainer = ({ router }) => {
   return (
     <div className="App-content_small-header">
-      <Message message={message} />
+      <Message router={router} />
     </div>
   );
 }

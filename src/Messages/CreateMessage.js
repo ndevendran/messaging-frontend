@@ -21,6 +21,47 @@ const CREATE_MESSAGE = gql`
   }
 `;
 
+const MESSAGES_QUERY = gql`
+  query Messages {
+    messages {
+      edges {
+        id
+        text
+        user {
+          id
+          username
+        }
+      }
+    }
+  }
+`;
+
+function updateMessages(client, mutationResult) {
+  const messages = client.readQuery({
+    query: MESSAGES_QUERY,
+  });
+
+  console.log(mutationResult);
+
+  client.writeQuery({
+    query: MESSAGES_QUERY,
+    data:
+      { messages:
+        {
+          ...messages.messages,
+          edges: messages.messages.edges
+          .concat(mutationResult.data.createMessage),
+        }
+      }
+  });
+
+  const message = {
+      message: mutationResult.data.createMessage,
+  };
+
+  return message;
+}
+
 function mapStateToProps(state, props) {
   const currentUser = state.profileState.currentUser;
   const token = state.profileState.token;
@@ -76,8 +117,13 @@ class CreateMessage extends React.Component {
             />
             <Mutation mutation={CREATE_MESSAGE}
               variables={{ text: this.state.value }}
-              update={this.onCreateMessage}
-              onCompleted={() => this.props.history.push('/')}
+              update={updateMessages}
+              onCompleted={() => {
+                this.props.history.push('/');
+                this.setState({
+                value: ''
+              });
+            }}
             >
               {(createMessage, { data, loading, error }) => {
                 if(error) {

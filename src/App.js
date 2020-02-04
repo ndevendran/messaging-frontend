@@ -8,33 +8,9 @@ import Profile from './Profile';
 import Navigation from './Navigation';
 import SignIn from './Login/SignIn.js';
 import { Logout } from './Login/Logout.js';
-import { Query } from 'react-apollo';
-import gql from 'graphql-tag';
 import { withTokenClear } from './Button/withTokenRefresh.js';
 
-const GET_MESSAGE = gql`
-  query( $id: ID! ){
-    message(id: $id) {
-      id
-      text
-      user {
-        id
-        username
-      }
-      likes {
-        count
-      }
-      comments {
-        id
-        text
-        user {
-          id
-          username
-        }
-      }
-    }
-  }
-`;
+
 
 
 class App extends Component {
@@ -81,28 +57,13 @@ class App extends Component {
 
           }
           />
-          <Route path="/view/:id" component={(router) =>
-            <div>
-              <Query
-                query={GET_MESSAGE}
-                variables={{ id: router.match.params.id }}
-                notifyOnNetworkStatusChange
-              >
-              {({ data, error, loading, networkStatus }) => {
-                if (error) console.log(error);
-                if(loading || !data) {
-                  return (<div>Loading...</div>);
-                }
-
-                const message = data.message;
+          <Route path="/view/:id" component={(router) => {
                 const MessageWithClear = withTokenClear(MessageContainer);
                 return (
-                  <MessageWithClear message={message} router={router} />
+                  <MessageWithClear router={router} />
                 );
-              }}
-              </Query>
-              </div>
-          }
+              }
+            }
           />
           <Route path="/profile" component={() =>
             <div className="App-content_small-header">
