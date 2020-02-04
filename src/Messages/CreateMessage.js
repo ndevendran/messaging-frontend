@@ -41,8 +41,6 @@ function updateMessages(client, mutationResult) {
     query: MESSAGES_QUERY,
   });
 
-  console.log(mutationResult);
-
   client.writeQuery({
     query: MESSAGES_QUERY,
     data:
@@ -112,39 +110,42 @@ class CreateMessage extends React.Component {
     if(this.state.token) {
       return (
         <div>
-            <input type="text" value={this.state.value}
-              onChange={this.onChangeMessage}
-            />
-            <Mutation mutation={CREATE_MESSAGE}
-              variables={{ text: this.state.value }}
-              update={updateMessages}
-              onCompleted={() => {
-                this.props.history.push('/');
-                this.setState({
-                value: ''
-              });
-            }}
-            >
-              {(createMessage, { data, loading, error }) => {
-                if(error) {
-                  return (
-                    <div>
-                      <div>Error creating message</div>
-                      <button type="submit" onClick={createMessage}>Create Message</button>
-                    </div>
-                  );
-                }
-                return (
-                    <ButtonWithRefresh
-                      type="button"
-                      onClick={createMessage}
-                      router={this.props.router}
-                    >
-                    Create Message
-                    </ButtonWithRefresh>
-                );
+            <div>
+              <textarea rows="4" cols="50"
+                value={this.state.value}
+                onChange={this.onChangeMessage}
+              ></textarea>
+              <Mutation mutation={CREATE_MESSAGE}
+                variables={{ text: this.state.value }}
+                update={updateMessages}
+                onCompleted={() => {
+                  this.props.history.push('/');
+                  this.setState({
+                  value: ''
+                });
               }}
-            </Mutation>
+              >
+                {(createMessage, { data, loading, error }) => {
+                  if(error) {
+                    return (
+                      <div>
+                        <div>Error creating message</div>
+                        <button type="submit" onClick={createMessage}>Create Message</button>
+                      </div>
+                    );
+                  }
+                  return (
+                      <ButtonWithRefresh
+                        type="button"
+                        onClick={createMessage}
+                        router={this.props.router}
+                      >
+                      Create Message
+                      </ButtonWithRefresh>
+                  );
+                }}
+              </Mutation>
+            </div>
         </div>
       );
     } else {

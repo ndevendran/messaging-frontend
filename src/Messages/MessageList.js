@@ -16,6 +16,7 @@ const GET_MESSAGES = gql`
   {
     messages {
       edges {
+        createdAt
         id
         text
         user {
