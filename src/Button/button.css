@@ -1,0 +1,29 @@
+.button_std {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+
+  padding: 0.5em 1em;
+
+  border: solid 1px transparent;
+  border-radius: 4px;
+
+  color: #ffffff;
+  background-color: #9555af;
+
+  outline: none;
+}
+
+.button_std:hover, .button_std:focus {
+  border-color: currentColor;
+  border-style: dashed;
+}
+
+.button_std:active {
+  transform: translateY(1px);
+  filter: saturate(150%);
+}
+
+.button_std::-moz-focus-inner {
+  border: none;
+}

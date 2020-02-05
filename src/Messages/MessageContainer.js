@@ -3,9 +3,7 @@ import Message from './Message.js';
 
 const MessageContainer = ({ router }) => {
   return (
-    <div className="App-content_small-header">
       <Message router={router} />
-    </div>
   );
 }
 

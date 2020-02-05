@@ -60,7 +60,9 @@ class App extends Component {
           <Route path="/view/:id" component={(router) => {
                 const MessageWithClear = withTokenClear(MessageContainer);
                 return (
-                  <MessageWithClear router={router} />
+                  <div className="App-content_large-header">
+                    <MessageWithClear router={router} />
+                  </div>
                 );
               }
             }

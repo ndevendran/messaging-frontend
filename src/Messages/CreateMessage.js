@@ -111,7 +111,7 @@ class CreateMessage extends React.Component {
     if(this.state.token) {
       return (
         <div className="create">
-            <div className="avatar"></div>
+            <div className="avatar">Avatar Belongs Here</div>
             <div>
               <textarea className="textInput"
                 rows="4" cols="50"
@@ -120,8 +120,7 @@ class CreateMessage extends React.Component {
               ></textarea>
               <div className="createOptions">
                 <div className="createFormatting">
-                  <span>Insert Picture</span>
-                  <span>Bold</span>
+                  <span>Formatting Options Belong Here</span>
                 </div>
                 <div className="createButton">
                   <Mutation mutation={CREATE_MESSAGE}

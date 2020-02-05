@@ -1,7 +1,8 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Redirect } from 'react-router-dom';
+import '../Messages/messageStyle.css';
+import Button from '../Button/Button.js';
 
 const CREATE_COMMENT = gql`
   mutation($text: String!, $messageId: ID!) {
@@ -81,36 +82,52 @@ class CreateComment extends React.Component {
   render() {
     if(this.state.token) {
       return (
-        <div>
-            <input type="text"
-              value={this.state.value}
-              onChange={this.onChangeComment}
-            />
-            <Mutation mutation={CREATE_COMMENT}
-              variables={{
-                text: this.state.value,
-                messageId: this.props.messageId,
-              }}
-              update={this.onCreateComment}
-              onCompleted={() => {
-                const url = '/view/' + (this.props.messageId);
-                this.props.router.history.push(url);
-              }}
-            >
-              {(createComment, { data, loading, error }) => {
-                if(error) {
-                  return (
-                    <div>
-                      <div>Error creating message</div>
-                      <button type="button" onClick={createComment}>Create Message</button>
-                    </div>
-                  );
-                }
-                return (
-                  <button type="submit" onClick={createComment}>Create Comment</button>
-                );
-              }}
-            </Mutation>
+        <div className="create">
+            <div className="avatar">Avatar belongs here</div>
+            <div>
+              <textarea className="textInput" rows="4" columns="40"
+                value={this.state.value}
+                onChange={this.onChangeComment}
+              ></textarea>
+              <div className="createOptions">
+                <div className="createFormatting">
+                  <span>Formatting</span>
+                </div>
+                <div className="createButton">
+                  <Mutation mutation={CREATE_COMMENT}
+                    variables={{
+                      text: this.state.value,
+                      messageId: this.props.messageId,
+                    }}
+                    update={this.onCreateComment}
+                    onCompleted={() => {
+                      const url = '/view/' + (this.props.messageId);
+                      this.props.router.history.push(url);
+                    }}
+                  >
+                    {(createComment, { data, loading, error }) => {
+                      if(error) {
+                        return (
+                          <div>
+                            <div>Error creating message</div>
+                            <button type="button" onClick={createComment}>Create Message</button>
+                          </div>
+                        );
+                      }
+                      return (
+                        <Button
+                          type="button"
+                          onClick={createComment}
+                          router={this.props.router}
+                        >
+                        Create Comment
+                        </Button>
+                      );
+                    }}
+                  </Mutation>
+                </div>
+              </div>
+            </div>
         </div>
       );
     } else {

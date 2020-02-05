@@ -12,7 +12,7 @@
   grid-template-rows: 100%;
 }
 
-.message {
+.message-container .message {
   text-align: left;
   grid-template-rows: 30% 40% 30%;
 }
@@ -30,13 +30,30 @@
   padding-top: 2%;
 }
 
-.message .footer {
+.message-footer {
   display: grid;
-  grid-template-columns: 2%
-      [footer-col1-start] 40%
-      [footer-col1-end] 40%;
+  grid-template-columns: [col1-start] 75%;
+  width: 500px;
+  margin: auto;
+  border: 1px solid lightblue;
+  border-top: none;
+}
+.message-footer .footer {
+  grid-column-start: col1-start;
+  display: grid;
+  grid-template-columns: 25%
+      [footer-col1-start] 50%
+      [footer-col1-end] 25%;
   grid-template-rows: 100%;
   padding-bottom: 2%;
+}
+
+.footer .likes {
+  grid-column-start: footer-col1-start;
+}
+
+.footer .comments {
+  grid-column-start: footer-col1-end;
 }
 
 .message .header {
@@ -67,7 +84,7 @@
   margin: auto;
   width: 500px;
   display: grid;
-  grid-template-columns: [avatar-start] 30% [create-options] 70%;
+  grid-template-columns: [avatar-start] 20% [create-options] 80%;
 }
 
 .create .textInput {
@@ -76,7 +93,7 @@
 }
 
 .create .avatar {
-  width: 30%;
+  padding-right: 20%;
   grid-column-start: avatar-start;
 }
 

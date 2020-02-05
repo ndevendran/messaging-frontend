@@ -1,4 +1,5 @@
 import React from 'react';
+import './button.css';
 
 export default function Button({
   onClick,
@@ -6,7 +7,7 @@ export default function Button({
   children
 }) {
   return (
-    <button type={type} onClick={onClick}>
+    <button className="button_std" type={type} onClick={onClick}>
       {children}
     </button>
   )

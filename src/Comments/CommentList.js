@@ -1,5 +1,5 @@
 import React from 'react';
-import CommentItem from './CommentItem.js';
+import ResponseItem from '../Common/ResponseItem.js';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
@@ -8,6 +8,7 @@ const GET_COMMENTS = gql`
     comments(messageId: $messageId) {
       edges {
         id
+        createdAt
         text
         user {
           id
@@ -36,7 +37,7 @@ export default({ messageId }) => {
             return (
               comments.map((comment) =>
                 <div key={comment.id}>
-                  <CommentItem comment={comment} />
+                  <ResponseItem response={comment} />
                 </div>
               )
             );
