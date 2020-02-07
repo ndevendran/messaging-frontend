@@ -1,32 +1,23 @@
 import React from 'react';
 import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 import { withTokenRefresh } from '../Common/Button/withTokenRefresh.js';
 import Button from '../Common/Button/Button.js';
-
-const CREATE_MESSAGE = gql`
-  mutation($text: String!) {
-    createMessage(text: $text) {
-      id
-      text
-      user {
-        id
-        username
-      }
-    }
-  }
-`;
+import '../Messages/messageStyle.css';
 
 const ButtonWithRefresh = withTokenRefresh(Button);
 
-export default ({ updateMessages, onComplete, text, onError }) =>
+export default ({ updateMessages,
+  onComplete, variables, onError,
+  router, mutation, children }) =>
+{
+  return (
   <div className="createOptions">
     <div className="createFormatting">
       <span>Formatting Options Belong Here</span>
     </div>
     <div className="createButton">
-      <Mutation mutation={CREATE_MESSAGE}
-        variables={{ text, }}
+      <Mutation mutation={mutation}
+        variables={variables}
         update={updateMessages}
         onCompleted={onComplete}
       >
@@ -38,9 +29,8 @@ export default ({ updateMessages, onComplete, text, onError }) =>
                 onClick={() => createMessage().catch(err => {
                   onError(err);
                 })}
-                router={this.props.router}
               >
-              Create Message
+              {children}
               </ButtonWithRefresh>
             </div>
           );
@@ -48,3 +38,5 @@ export default ({ updateMessages, onComplete, text, onError }) =>
       </Mutation>
     </div>
   </div>
+);
+}

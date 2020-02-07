@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 import { doCreateMessage } from '../actionCreator.js';
 import uuid from 'uuid/v4';
 import gql from 'graphql-tag';
-import { Mutation } from 'react-apollo';
-import { withTokenRefresh } from '../Common/Button/withTokenRefresh.js';
-import Button from '../Common/Button/Button.js';
 import './messageStyle.css';
 import Error from '../Common/Error.js';
 import CreateOptions from '../Common/CreateOptions.js';
@@ -73,6 +70,7 @@ class CreateMessage extends React.Component {
     this.onCreateMessage = this.onCreateMessage.bind(this);
     this.onCompleted = this.onCompleted.bind(this);
     this.updateMessages = this.updateMessages.bind(this);
+    this.onError = this.onError.bind(this);
   }
 
   updateMessages(client, mutationResult) {
@@ -127,7 +125,6 @@ class CreateMessage extends React.Component {
   }
 
   render () {
-    const ButtonWithRefresh = withTokenRefresh(Button);
     const prevError = this.state.error;
     if(this.state.token) {
       return (
@@ -140,41 +137,15 @@ class CreateMessage extends React.Component {
                   value={this.state.value}
                   onChange={this.onChangeMessage}
                 ></textarea>
-                <div className="createOptions">
-                  <div className="createFormatting">
-                    <span>Formatting Options Belong Here</span>
-                  </div>
-                  <div className="createButton">
-                    <Mutation mutation={CREATE_MESSAGE}
-                      variables={{ text: this.state.value }}
-                      update={this.updateMessages}
-                      onCompleted={() => {
-                        this.props.history.push('/');
-                        this.setState({
-                        value: ''
-                      });
-                    }}
-                    >
-                      {(createMessage, { data, loading, error }) => {
-                        return (
-                          <div>
-                            <ButtonWithRefresh
-                              type="button"
-                              onClick={() => createMessage().catch(err => {
-                                this.setState({
-                                  error: err.message,
-                                });
-                              })}
-                              router={this.props.router}
-                            >
-                            Create Message
-                            </ButtonWithRefresh>
-                          </div>
-                        );
-                      }}
-                    </Mutation>
-                  </div>
-                </div>
+                  <CreateOptions
+                    mutation={CREATE_MESSAGE}
+                    updateMessages={this.updateMessages}
+                    onComplete={this.onCompleted}
+                    onError={this.onError}
+                    variables={{ text: this.state.value }}
+                    router={this.props.router}
+                  > Create Message
+                  </CreateOptions>
               </div>
           </div>
           <div>
