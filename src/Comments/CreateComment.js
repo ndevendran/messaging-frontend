@@ -2,7 +2,7 @@ import React from 'react';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import '../Messages/messageStyle.css';
-import Button from '../Button/Button.js';
+import Button from '../Common/Button/Button.js';
 
 const CREATE_COMMENT = gql`
   mutation($text: String!, $messageId: ID!) {

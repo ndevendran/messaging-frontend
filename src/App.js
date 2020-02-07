@@ -8,7 +8,7 @@ import Profile from './Profile';
 import Navigation from './Navigation';
 import SignIn from './Login/SignIn.js';
 import { Logout } from './Login/Logout.js';
-import { withTokenClear } from './Button/withTokenRefresh.js';
+import { withTokenClear } from './Common/Button/withTokenRefresh.js';
 
 
 

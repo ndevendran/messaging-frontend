@@ -30,7 +30,16 @@ const httpLink = new HttpLink({
 const errorLink = onError(({
   graphQLErrors, networkError }) => {
     if (graphQLErrors) {
-      //do something
+      for (let err of graphQLErrors) {
+        switch(err.extensions.code) {
+          case 'FORBIDDEN':
+            alert(err.message);
+            break;
+          default:
+            console.log(err.message);
+        }
+
+      }
     }
 
   if (networkError) {
