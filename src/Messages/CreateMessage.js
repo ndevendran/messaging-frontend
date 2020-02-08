@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { doCreateMessage } from '../actionCreator.js';
 import uuid from 'uuid/v4';
 import gql from 'graphql-tag';
-import './messageStyle.css';
 import Error from '../Common/Error.js';
-import CreateOptions from '../Common/CreateOptions.js';
+import CreateResponse from '../Common/CreateResponse.js';
 
+var _isMounted = false;
 
 const CREATE_MESSAGE = gql`
   mutation($text: String!) {
@@ -71,12 +71,31 @@ class CreateMessage extends React.Component {
     this.onCompleted = this.onCompleted.bind(this);
     this.updateMessages = this.updateMessages.bind(this);
     this.onError = this.onError.bind(this);
+    this.onErrorClear = this.onErrorClear.bind(this);
+  }
+
+  componentDidMount() {
+    _isMounted = true;
+  }
+
+  componentWillUnmount() {
+    _isMounted = false;
+  }
+
+
+  onErrorClear() {
+    if(_isMounted) {
+      this.setState({
+        error: null,
+      });
+    }
   }
 
   updateMessages(client, mutationResult) {
     const messages = client.readQuery({
       query: MESSAGES_QUERY,
     });
+
 
     client.writeQuery({
       query: MESSAGES_QUERY,
@@ -98,30 +117,38 @@ class CreateMessage extends React.Component {
   }
 
   onError(err) {
-    this.setState({
-      error: err.message,
-    });
+    if(_isMounted) {
+      this.setState({
+        error: err.message,
+      });
+    }
   }
 
   onCompleted() {
-    this.props.history.push('/');
-    this.setState({
-      value: ''
-    });
+    if(_isMounted) {
+      this.props.history.push('/');
+      this.setState({
+        value: ''
+      });
+    }
   }
 
   onChangeMessage(event) {
-    const value = event.target.value;
-    this.setState({
-      value,
-    });
+    if(_isMounted) {
+      const value = event.target.value;
+      this.setState({
+        value,
+      });
+    }
   }
 
   onCreateMessage(client, mutationResult) {
-    this.props.createMessage(this.state.value, this.props.currentUser);
-    this.setState({
-      value: '',
-    });
+    if(_isMounted) {
+      this.props.createMessage(this.state.value, this.props.currentUser);
+      this.setState({
+        value: '',
+      });
+    }
   }
 
   render () {
@@ -129,28 +156,23 @@ class CreateMessage extends React.Component {
     if(this.state.token) {
       return (
         <div>
-          <div className="create">
-              <div className="avatar">Avatar Belongs Here</div>
-              <div>
-                <textarea className="textInput"
-                  rows="4" cols="50"
-                  value={this.state.value}
-                  onChange={this.onChangeMessage}
-                ></textarea>
-                  <CreateOptions
-                    mutation={CREATE_MESSAGE}
-                    updateMessages={this.updateMessages}
-                    onComplete={this.onCompleted}
-                    onError={this.onError}
-                    variables={{ text: this.state.value }}
-                    router={this.props.router}
-                  > Create Message
-                  </CreateOptions>
-              </div>
-          </div>
-          <div>
+          <CreateResponse
+            mutation={CREATE_MESSAGE}
+            update={this.updateMessages}
+            onComplete={this.onCompleted}
+            onChange={this.onChangeMessage}
+            onError={this.onError}
+            variables={{ text: this.state.value }}
+            router={this.props.router}
+            value={this.state.value}
+          > Create Message
+          </CreateResponse>
+        <div>
           {
-            prevError && <Error error={prevError} />
+            prevError && <Error
+              error={prevError}
+              onErrorClear={this.onErrorClear}
+             />
           }
           </div>
         </div>
@@ -160,9 +182,8 @@ class CreateMessage extends React.Component {
         <div>
           Please Login To Create Messages...
         </div>
-      )
+      );
     }
-
   }
 }
 

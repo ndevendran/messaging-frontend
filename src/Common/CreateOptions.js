@@ -6,7 +6,7 @@ import '../Messages/messageStyle.css';
 
 const ButtonWithRefresh = withTokenRefresh(Button);
 
-export default ({ updateMessages,
+export default ({ update,
   onComplete, variables, onError,
   router, mutation, children }) =>
 {
@@ -18,7 +18,7 @@ export default ({ updateMessages,
     <div className="createButton">
       <Mutation mutation={mutation}
         variables={variables}
-        update={updateMessages}
+        update={update}
         onCompleted={onComplete}
       >
         {(createMessage, { data, loading, error }) => {

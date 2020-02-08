@@ -1,7 +1,7 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import '../Messages/messageStyle.css';
-import CreateOptions from '../Common/CreateOptions';
+import CreateResponse from '../Common/CreateResponse';
+import Error from '../Common/Error.js';
 
 const CREATE_COMMENT = gql`
   mutation($text: String!, $messageId: ID!) {
@@ -47,6 +47,13 @@ class CreateComment extends React.Component {
     this.onCreateComment = this.onCreateComment.bind(this);
     this.onComplete = this.onComplete.bind(this);
     this.onError = this.onError.bind(this);
+    this.onErrorClear = this.onErrorClear.bind(this);
+  }
+
+  onErrorClear() {
+    this.setState({
+      error: null,
+    });
   }
 
   onChangeComment(event) {
@@ -94,26 +101,25 @@ class CreateComment extends React.Component {
 
   render() {
     if(this.state.token) {
+      const error = this.state.error;
       return (
-        <div className="create">
-            <div className="avatar">Avatar belongs here</div>
-            <div>
-              <textarea className="textInput" rows="4" columns="40"
-                value={this.state.value}
-                onChange={this.onChangeComment}
-              ></textarea>
-              <CreateOptions
-                updateMessages={this.onCreateComment}
-                onComplete={this.onComplete}
-                onError={this.onError}
-                router={this.props.router}
-                mutation={CREATE_COMMENT}
-                variables={{
-                  text: this.state.value,
-                  messageId: this.props.messageId
-                }}
-              >Create Comment</CreateOptions>
-            </div>
+        <div>
+          <CreateResponse
+            update={this.onCreateComment}
+            onComplete={this.onComplete}
+            onError={this.onError}
+            router={this.props.router}
+            mutation={CREATE_COMMENT}
+            variables={{
+              text: this.state.value,
+              messageId: this.props.messageId
+            }}
+            value={this.state.value}
+            onChange={this.onChangeComment}
+          >Create Comment</CreateResponse>
+          {
+            error && <Error error={error} />
+          }
         </div>
       );
     } else {

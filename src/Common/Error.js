@@ -1,8 +1,9 @@
 import React from 'react';
+import './error.css';
 
-export default function({ error }) {
+export default function({ error, onErrorClear }) {
   return (
-    <div className="error">
+    <div className="error" onClick={onErrorClear}>
       <span>{ error }</span>
     </div>
   )
